@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Mini URL</title>
+
+    <!-- Booststrap minified -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <!-- Vue.js -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.min.js"></script>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Mini URL</h2>
+            </div>
+            <div class="col-md-12" id="mini-url">
+                <div class="form-group">
+                    <label for="url">Your URL:</label>
+                    <input type="url" class="form-control" id="url" v-model="originalURL">
+                </div>
+                <button type="submit" class="btn btn-default" v-on:click="makeRequest(originalURL)">Submit</button>
+
+                {{miniURL}}
+                {{errorMessage}}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    new Vue({
+        el: '#mini-url',
+        data: {
+            miniURL: '',
+            errorMsg: ''
+        },
+        methods: {
+            makeRequest: function (originalURL) {
+                // clear the error
+                this.errorMsg = ''
+
+                this.$http({
+                        method: 'POST',
+                        url: "/mini",
+                        data: JSON.stringify({
+                            URL: originalURL,
+                        }),
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                    })
+                    .then(response => {
+                        this.miniURL = response.data
+                    }).catch((err) => {
+                        this.errorMessage = err.status + ": " + err.statusText
+                    })
+            }
+        }
+    })
+</script>
