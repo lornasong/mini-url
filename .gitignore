@@ -1,0 +1,8 @@
+// binaries
+build
+
+// dependency vendoring
+vendor
+
+// env var
+.envrc
