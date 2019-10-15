@@ -55,10 +55,11 @@ func GoTo() echo.HandlerFunc {
 
 func findOriginalURL(id string) (string, error) {
 	// TODO:
-	return "https://www.google.com", nil
+	return "", errors.New("new error")
+	// return "https://www.google.com", nil
 }
 
 func generateMiniURL(originalURL string) (string, error) {
 	// TODO:
-	return "https://www.github.com", nil
+	return originalURL, nil
 }
