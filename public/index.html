@@ -58,6 +58,7 @@
             makeRequest: function (originalURL) {
                 // clear the error
                 this.errorMsg = ''
+                this.miniURL = ''
 
                 this.$http({
                         method: 'POST',
@@ -73,7 +74,10 @@
                     .then(response => {
                         this.miniURL = response.data
                     }).catch((err) => {
-                        this.errorMsg = err.status + ": " + err.statusText
+                        this.errorMsg = err.status + " " + err.statusText
+                        if (err.data != null && err.data.message != null && err.data.message != "") {
+                            this.errorMsg = this.errorMsg + ": " + err.data.message
+                        }
                     })
             }
         }
