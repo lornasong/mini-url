@@ -9,6 +9,8 @@
     <!-- Vue.js -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.min.js"></script>
+</head>
+
 <body>
     <div class="container">
         <div class="row">
@@ -57,7 +59,7 @@
                     .then(response => {
                         this.miniURL = response.data
                     }).catch((err) => {
-                        this.errorMessage = err.status + ": " + err.statusText
+                        this.errorMsg = err.status + ": " + err.statusText
                     })
             }
         }
