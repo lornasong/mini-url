@@ -12,20 +12,34 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="mini-url">
         <div class="row">
-            <div class="col-md-4">
+            <div class="jumbotron jumbotron-fluid">
                 <h2>Mini URL</h2>
             </div>
-            <div class="col-md-12" id="mini-url">
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label for="url">Your URL:</label>
                     <input type="url" class="form-control" id="url" v-model="originalURL">
                 </div>
                 <button type="submit" class="btn btn-default" v-on:click="makeRequest(originalURL)">Submit</button>
-
-                {{miniURL}}
-                {{errorMessage}}
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12">
+                <div v-if="miniURL != ''">
+                    <div class="alert alert-info" role="alert">
+                        {{miniURL}}
+                    </div>
+                </div>
+                <div v-if="errorMsg != ''">
+                    <div class="alert alert-danger" role="alert">
+                        {{errorMsg}}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
