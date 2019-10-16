@@ -21,9 +21,9 @@ func main() {
 	}
 
 	e := echo.New()
-	e.File("/miniurl", "public/index.html")
-	e.POST("/mini", handlers.Generate())
-	e.GET("/mini/:id", handlers.GoTo())
+	e.File("/minihome", "public/index.html")
+	e.POST("/mini", handlers.GenerateURLHandler{BaseURL: c.BaseURL, APIPath: c.APIPath}.Do)
+	e.GET("/mini/:id", handlers.GoToURLHandler{}.Do)
 	e.Start(":" + port)
 }
 
