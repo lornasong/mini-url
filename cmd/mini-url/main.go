@@ -1,12 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"os"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo"
+	_ "github.com/lib/pq"
 	"github.com/lornasong/mini-url/src/handlers"
+	"github.com/pkg/errors"
 )
 
 func main() {
@@ -20,10 +23,19 @@ func main() {
 		log.Fatalln("$PORT must be set")
 	}
 
+	url, ok := os.LookupEnv("DATABASE_URL")
+	if !ok {
+		log.Fatalln("$DATABASE_URL is required")
+	}
+	db, err := connect(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	e := echo.New()
 	e.File("/minihome", "public/index.html")
-	e.POST("/mini", handlers.GenerateURLHandler{BaseURL: c.BaseURL, APIPath: c.APIPath}.Do)
-	e.GET("/mini/:id", handlers.GoToURLHandler{}.Do)
+	e.POST("/mini", handlers.GenerateURLHandler{Db: db, BaseURL: c.BaseURL, APIPath: c.APIPath}.Do)
+	e.GET("/mini/:id", handlers.GoToURLHandler{Db: db}.Do)
 	e.Start(":" + port)
 }
 
@@ -41,4 +53,17 @@ func LoadConfig() (*Config, error) {
 		return nil, err
 	}
 	return &c, nil
+}
+
+func connect(dbURL string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		return nil, errors.Wrap(err, "error opening sql db")
+	}
+
+	err = db.Ping()
+	if err != nil {
+		return nil, errors.Wrap(err, "error pinging db")
+	}
+	return db, nil
 }

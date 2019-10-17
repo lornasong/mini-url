@@ -1,14 +1,17 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo"
+	"github.com/pkg/errors"
 )
 
 // GenerateURLHandler handles requests to generate a mini url
 type GenerateURLHandler struct {
+	Db      *sql.DB
 	BaseURL string
 	APIPath string
 }
@@ -30,6 +33,7 @@ func (h GenerateURLHandler) Do(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Please enter a url value")
 	}
 
+	// TODO: clean url
 	miniURL, err := h.generateMiniURL(input.URL)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Problem generating mini url"+err.Error())
@@ -39,9 +43,12 @@ func (h GenerateURLHandler) Do(ctx echo.Context) error {
 }
 
 func (h GenerateURLHandler) generateMiniURL(originalURL string) (string, error) {
-
 	id := generateBase62()
-	// TODO: store in persistent database
+	sqlStatement := `INSERT INTO url (id, original_url) VALUES ($1, $2)`
+
+	if _, err := h.Db.Exec(sqlStatement, id, originalURL); err != nil {
+		return "", errors.Wrap(err, fmt.Sprintf("error saving in db id %s url %s", id, originalURL))
+	}
 
 	return fmt.Sprintf("%s/%s/%s", h.BaseURL, h.APIPath, id), nil
 }
