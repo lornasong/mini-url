@@ -34,7 +34,7 @@ func main() {
 
 	e := echo.New()
 	e.File("/minihome", "public/index.html")
-	e.POST("/mini", handlers.GenerateURLHandler{Db: db, BaseURL: c.BaseURL, APIPath: c.APIPath}.Do)
+	e.POST("/mini", handlers.GenerateURLHandler{Db: db, BaseURL: c.BaseURL}.Do)
 	e.GET("/mini/:id", handlers.GoToURLHandler{Db: db}.Do)
 	e.Start(":" + port)
 }
@@ -42,7 +42,6 @@ func main() {
 // Config TODO:
 type Config struct {
 	BaseURL string `envconfig:"BASE_URL" required:"true`
-	APIPath string `envconfig:"API_PATH" required:"true`
 }
 
 // LoadConfig loads the configuration object based on the environment and other defaults.

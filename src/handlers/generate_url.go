@@ -9,11 +9,12 @@ import (
 	"github.com/pkg/errors"
 )
 
+const apiPath = "mini"
+
 // GenerateURLHandler handles requests to generate a mini url
 type GenerateURLHandler struct {
 	Db      *sql.DB
 	BaseURL string
-	APIPath string
 }
 
 // GenerateURL is the structure representing the request to generate a mini url
@@ -50,5 +51,5 @@ func (h GenerateURLHandler) generateMiniURL(originalURL string) (string, error) 
 		return "", errors.Wrap(err, fmt.Sprintf("error saving in db id %s url %s", id, originalURL))
 	}
 
-	return fmt.Sprintf("%s/%s/%s", h.BaseURL, h.APIPath, id), nil
+	return fmt.Sprintf("%s/%s/%s", h.BaseURL, apiPath, id), nil
 }
