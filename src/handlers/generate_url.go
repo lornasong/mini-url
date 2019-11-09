@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
@@ -34,7 +35,7 @@ func (h GenerateURLHandler) Do(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Please enter a url value")
 	}
 
-	// TODO: clean url
+	input.URL = strings.TrimSpace(input.URL)
 	miniURL, err := h.generateMiniURL(input.URL)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Problem generating mini url"+err.Error())
