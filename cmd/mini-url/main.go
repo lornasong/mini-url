@@ -23,11 +23,7 @@ func main() {
 		log.Fatalln("$PORT must be set")
 	}
 
-	url, ok := os.LookupEnv("DATABASE_URL")
-	if !ok {
-		log.Fatalln("$DATABASE_URL is required")
-	}
-	db, err := connect(url)
+	db, err := connect(c.DatabaseURL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,9 +35,10 @@ func main() {
 	e.Start(":" + port)
 }
 
-// Config TODO:
+// Config retrieves and store environment variables
 type Config struct {
-	BaseURL string `envconfig:"BASE_URL" required:"true`
+	BaseURL     string `envconfig:"BASE_URL" required:"true`
+	DatabaseURL string `envconfig:"DATABASE_URL" required:"true`
 }
 
 // LoadConfig loads the configuration object based on the environment and other defaults.
