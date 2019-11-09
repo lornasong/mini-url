@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"log"
-	"os"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo"
@@ -18,11 +17,6 @@ func main() {
 		log.Fatalln("Error loading configs", err)
 	}
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatalln("$PORT must be set")
-	}
-
 	db, err := connect(c.DatabaseURL)
 	if err != nil {
 		log.Fatal(err)
@@ -32,13 +26,14 @@ func main() {
 	e.File("/minihome", "public/index.html")
 	e.POST("/mini", handlers.GenerateURLHandler{Db: db, BaseURL: c.BaseURL}.Do)
 	e.GET("/mini/:id", handlers.GoToURLHandler{Db: db}.Do)
-	e.Start(":" + port)
+	e.Start(":" + c.Port)
 }
 
 // Config retrieves and store environment variables
 type Config struct {
 	BaseURL     string `envconfig:"BASE_URL" required:"true`
 	DatabaseURL string `envconfig:"DATABASE_URL" required:"true`
+	Port        string `required:"true`
 }
 
 // LoadConfig loads the configuration object based on the environment and other defaults.
