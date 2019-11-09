@@ -18,3 +18,6 @@ run: local-build
 	./build/$(PROJECT)
 
 .PHONY: default test dep build local-build run
+
+deploy:
+	git push heroku master
