@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	c, err := LoadConfig()
+	c, err := loadConfig()
 	if err != nil {
 		log.Fatalln("Error loading configs", err)
 	}
@@ -36,8 +36,7 @@ type Config struct {
 	Port        string `required:"true`
 }
 
-// LoadConfig loads the configuration object based on the environment and other defaults.
-func LoadConfig() (*Config, error) {
+func loadConfig() (*Config, error) {
 	var c Config
 	err := envconfig.Process("", &c)
 	if err != nil {
@@ -56,5 +55,6 @@ func connect(dbURL string) (*sql.DB, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "error pinging db")
 	}
+
 	return db, nil
 }
